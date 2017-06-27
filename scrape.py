@@ -38,13 +38,14 @@ class Dates:
 
 class Spider():
     def __init__(self):
-        credentials = json.loads(open('credentials.json').read())
+        credentials = {}
         conn_string = ''
         mongodb_uri_exists = 'MONGODB_URI' in os.environ
         if mongodb_uri_exists:
             conn_string = os.environ['MONGODB_URI']
             credentials = {'website_username' : os.environ['WEBSITE_USERNAME'], 'website_password' : os.environ['WEBSITE_PASSWORD']}
         elif os.path.isfile('credentials.json'):
+            credentials = json.loads(open('credentials.json').read())
             conn_string = 'mongodb://%s:%s@%s:%s/%s'
             conn_string = conn_string % (credentials['user'],
                                          credentials['password'],
