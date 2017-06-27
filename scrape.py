@@ -62,8 +62,8 @@ class Spider():
         )
         #wd = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'phantomjs'), desired_capabilities=dcap)
         wd = webdriver.PhantomJS('/app/phantomjs', desired_capabilities=dcap)
-        self.main_page()
         self.wd = wd
+        self.main_page()
 
     def main_page(self):
         self.wd.get('https://www.basinlandrecords.com/hflogin.html')
