@@ -42,7 +42,8 @@ class Spider():
         conn_string = ''
         mongodb_uri_exists = 'MONGODB_URI' in os.environ
         if mongodb_uri_exists:
-            credentials = os.environ['MONGODB_URI']
+            conn_string = os.environ['MONGODB_URI']
+            credentials = {'website_username' : os.environ['WEBSITE_USERNAME'], 'website_password' : os.environ['WEBSITE_PASSWORD']}
         elif os.path.isfile('credentials.json'):
             conn_string = 'mongodb://%s:%s@%s:%s/%s'
             conn_string = conn_string % (credentials['user'],
@@ -71,8 +72,7 @@ class Spider():
         wd = self.wd
         search_page = 'https://www.basinlandrecords.com/scripts/hfweb.asp'
         dates = Dates()
-        for date in dates:
-            if wd.current_url != search_page: wd.get(search_page)
+        for i, date in enumerate(dates):
             wd.find_element_by_name('detailsearch').click()
             wd.find_element_by_name('ViewReferences').click()
             wd.find_element_by_name('FIELD15').send_keys(date.start)
@@ -106,8 +106,9 @@ class Spider():
                             items[-1][key] += '|' + item[key]
 
             self.collection.insert_many(items)
-            print('Scraped ' + date.start + ' - ' + date.end)
+            print('Scraped ' + date.start + ' - ' + date.end + '. Items length: ' + str(len(items)))
             sleep(5)
+            wd.find_element_by_xpath(".//a[@href='/scripts/hfweb.asp?Application=DAL&Database=LC']").click()
 
 if __name__ == '__main__':
     spider = Spider()
