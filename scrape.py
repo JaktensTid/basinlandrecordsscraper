@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import namedtuple
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import NoSuchElementException
 from pymongo import MongoClient
 from time import sleep
 
@@ -14,7 +15,7 @@ class Dates:
         self.format = '%m/%d/%Y'
         self._today = datetime.now()
         self.next = 0
-        self._end = datetime.strptime('10/01/1981', self.format)
+        self._end = datetime.strptime('07/01/1983', self.format)
         self._start = self._end + relativedelta(months=1)
         self.Date = namedtuple('Date', ['end', 'start'])
         self.begin = self.Date(self._start.strftime(self.format),
@@ -43,9 +44,9 @@ class Spider():
         mongodb_uri_exists = 'MONGODB_URI' in os.environ
         if mongodb_uri_exists:
             conn_string = os.environ['MONGODB_URI']
-            credentials = {'website_username' : os.environ['WEBSITE_USERNAME'], 'website_password' : os.environ['WEBSITE_PASSWORD']}
+            self.credentials = {'website_username' : os.environ['WEBSITE_USERNAME'], 'website_password' : os.environ['WEBSITE_PASSWORD']}
         elif os.path.isfile('credentials.json'):
-            credentials = json.loads(open('credentials.json').read())
+            self.credentials = json.loads(open('credentials.json').read())
             conn_string = 'mongodb://%s:%s@%s:%s/%s'
             conn_string = conn_string % (credentials['user'],
                                          credentials['password'],
@@ -61,25 +62,35 @@ class Spider():
         )
         #wd = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'phantomjs'), desired_capabilities=dcap)
         wd = webdriver.PhantomJS('/app/phantomjs', desired_capabilities=dcap)
-        wd.get('https://www.basinlandrecords.com/hflogin.html')
-        wd.find_element_by_name('FormUser').send_keys(credentials['website_username'])
-        wd.find_element_by_name('FormPassword').send_keys(credentials['website_password'])
-        wd.find_element_by_xpath(".//input[@type='submit']").click()
-        wd.find_element_by_xpath(".//a[@href='/scripts/hfweb.asp']").click()
-        wd.find_element_by_xpath(".//select/option[position()=2]").click()
-        wd.find_element_by_xpath(".//input[@type='image']").click()
+        self.main_page()
         self.wd = wd
+
+    def main_page(self):
+        self.wd.get('https://www.basinlandrecords.com/hflogin.html')
+        self.wd.find_element_by_name('FormUser').send_keys(self.credentials['website_username'])
+        self.wd.find_element_by_name('FormPassword').send_keys(self.credentials['website_password'])
+        self.wd.find_element_by_xpath(".//input[@type='submit']").click()
+        self.wd.find_element_by_xpath(".//a[@href='/scripts/hfweb.asp']").click()
+        self.wd.find_element_by_xpath(".//select/option[position()=2]").click()
+        self.wd.find_element_by_xpath(".//input[@type='image']").click()
 
     def scrape(self):
         wd = self.wd
-        search_page = 'https://www.basinlandrecords.com/scripts/hfweb.asp'
         dates = Dates()
-        for i, date in enumerate(dates):
-            wd.find_element_by_name('detailsearch').click()
-            wd.find_element_by_name('ViewReferences').click()
-            wd.find_element_by_name('FIELD15').send_keys(date.start)
-            wd.find_element_by_name('FIELD15B').send_keys(date.end)
-            wd.find_elements_by_name('DataAction')[0].click()
+        for date in dates:
+            for i in range(0, 3):
+                try:
+                    wd.find_element_by_name('detailsearch').click()
+                    wd.find_element_by_name('ViewReferences').click()
+                    wd.find_element_by_name('FIELD15').send_keys(date.start)
+                    wd.find_element_by_name('FIELD15B').send_keys(date.end)
+                    wd.find_elements_by_name('DataAction')[0].click()
+                    break
+                except NoSuchElementException:
+                    sleep(60 * 5)
+                    print('No such element exception')
+                    self.main_page()
+
 
             document = html.fromstring(wd.page_source)
             items = []
