@@ -59,7 +59,8 @@ class Spider():
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0"
         )
-        wd = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'phantomjs'), desired_capabilities=dcap)
+        #wd = webdriver.PhantomJS(os.path.join(os.path.dirname(__file__), 'phantomjs'), desired_capabilities=dcap)
+        wd = webdriver.PhantomJS('/app/phantomjs', desired_capabilities=dcap)
         wd.get('https://www.basinlandrecords.com/hflogin.html')
         wd.find_element_by_name('FormUser').send_keys(credentials['website_username'])
         wd.find_element_by_name('FormPassword').send_keys(credentials['website_password'])
