@@ -96,7 +96,7 @@ class Spider():
 
             document = html.fromstring(wd.page_source)
             items = []
-            for tr in document.xpath(".//table[@cellpadding='4']//tr[not(@align='LEFT')]")[1:]:
+            for tr in document.xpath(".//table[@cellpadding='4']//tr[not(@align='LEFT') and @valign='TOP']"):
                 item = {}
                 tds = tr.xpath('.//td')
                 view_exists = True if 'VIEW' in ''.join(tds[1].xpath('.//text()')) else False
