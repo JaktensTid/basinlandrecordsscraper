@@ -104,15 +104,15 @@ class Spider():
                 item['book_vol'] = tds[3].text
                 item['page'] = tds[4].text
                 item['clerk_instr_type'] = tds[5].text
-                item['instr_date'] = tds[6].text
-                item['file_date'] = tds[7].text
-                item['grantor'] = tds[8].text
-                item['grantee'] = tds[9].text
-                item['sub_blk_lot'] = tds[10].text
-                item['sec_twp_rng'] = tds[11].text
-                item['brief_legal'] = tds[12].text
-                item['prior_reference'] = tds[13].text
-                item['remarks'] = tds[14].text
+                #item['instr_date'] = tds[6].text
+                item['file_date'] = tds[6].text
+                item['grantor'] = tds[7].text
+                item['grantee'] = tds[8].text
+                item['sub_blk_lot'] = tds[9].text
+                item['sec_twp_rng'] = tds[10].text
+                item['brief_legal'] = tds[11].text
+                item['prior_reference'] = tds[12].text
+                item['remarks'] = tds[13].text
                 if view_exists:
                     items.append(item)
                 else:
