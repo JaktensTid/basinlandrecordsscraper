@@ -57,7 +57,7 @@ class Spider():
                                          credentials['db'])
         client = MongoClient(conn_string)
         db = client['data']
-        self.collection = db['basinlandrecords']
+        self.collection = db['basinlandrecords_eddy']
         dcap = dict(DesiredCapabilities.PHANTOMJS)
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0"
@@ -73,7 +73,7 @@ class Spider():
         self.wd.find_element_by_name('FormPassword').send_keys(self.credentials['website_password'])
         self.wd.find_element_by_xpath(".//input[@type='submit']").click()
         self.wd.find_element_by_xpath(".//a[@href='/scripts/hfweb.asp']").click()
-        self.wd.find_element_by_xpath(".//select/option[position()=2]").click()
+        self.wd.find_element_by_xpath(".//select/option[position()=1]").click()
         self.wd.find_element_by_xpath(".//input[@type='image']").click()
 
     def scrape(self):
