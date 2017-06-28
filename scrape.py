@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from lxml import html
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -15,7 +16,8 @@ class Dates:
         self.format = '%m/%d/%Y'
         self._today = datetime.now()
         self.next = 0
-        self._end = datetime.strptime('10/01/2006', self.format)
+        next_date = sys.argv[1]
+        self._end = datetime.strptime(next_date, self.format)
         self._start = self._end + relativedelta(months=1)
         self.Date = namedtuple('Date', ['end', 'start'])
         self.begin = self.Date(self._start.strftime(self.format),
