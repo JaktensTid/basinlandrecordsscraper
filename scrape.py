@@ -15,7 +15,7 @@ class Dates:
         self.format = '%m/%d/%Y'
         self._today = datetime.now()
         self.next = 0
-        self._end = datetime.strptime('07/01/1983', self.format)
+        self._end = datetime.strptime('10/01/2006', self.format)
         self._start = self._end + relativedelta(months=1)
         self.Date = namedtuple('Date', ['end', 'start'])
         self.begin = self.Date(self._start.strftime(self.format),
