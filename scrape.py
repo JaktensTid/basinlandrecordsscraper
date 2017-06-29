@@ -123,7 +123,7 @@ class Spider():
             self.collection.insert_many(items)
             print('Scraped ' + date.start + ' - ' + date.end + '. Items length: ' + str(len(items)))
             sleep(5)
-            wd.find_element_by_xpath(".//a[@href='/scripts/hfweb.asp?Application=DAL&Database=LC']").click()
+            wd.find_element_by_xpath(".//a[@href='/scripts/hfweb.asp?Application=DAL&Database=EC']").click()
 
 if __name__ == '__main__':
     spider = Spider()
