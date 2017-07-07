@@ -10,6 +10,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 from pymongo import MongoClient
 from time import sleep
+from parse_data import parse_geolocation
 
 class Dates:
     def __init__(self):
