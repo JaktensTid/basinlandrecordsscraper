@@ -176,9 +176,11 @@ class LeaScraper(Spider):
 
 
 if __name__ == '__main__':
-    spider = None
-    if sys.argv[1] == 'eddy':
-        spider = EddyScraper()
-    if sys.argv[1] == 'lea':
-        spider = LeaScraper()
-    spider.scrape()
+    today = datetime.today()
+    if today.day == 1:
+        spider = None
+        if sys.argv[1] == 'eddy':
+            spider = EddyScraper()
+        if sys.argv[1] == 'lea':
+            spider = LeaScraper()
+        spider.scrape()
