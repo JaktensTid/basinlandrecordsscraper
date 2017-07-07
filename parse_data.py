@@ -1,13 +1,14 @@
 get_location = lambda twp_rng_sec: {'twp': twp_rng_sec[0],
                                     'rng': twp_rng_sec[1],
                                     'sec': twp_rng_sec[2]}
-empty = dict(zip(['twp', 'rng', 'sec', 'aliqout'], [None] * 4))
+empty = dict(zip(['twp', 'rng', 'sec', 'aliquot'], [None] * 4))
 
 
 def parse_geolocation(record):
     geolocation = record['sec_twp_rng']
     if not geolocation:
-        return empty
+        yield empty
+        return
     for divided in geolocation.split('|'):
         splited = divided.split(' ')
         if splited and len(splited) > 1:

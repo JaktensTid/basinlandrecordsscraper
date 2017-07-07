@@ -16,11 +16,7 @@ class Dates:
         self.format = '%m/%d/%Y'
         self._today = datetime.now()
         self.next = 0
-        if len(sys.argv) > 1:
-            next_date = sys.argv[1]
-            self._end = datetime.strptime(next_date, self.format)
-        else:
-            self._end = datetime.strptime('01/01/1980', self.format)
+        self._end = self._today - relativedelta(months=1)
         self._start = self._end + relativedelta(months=1)
         self.Date = namedtuple('Date', ['end', 'start'])
         self.begin = self.Date(self._start.strftime(self.format),
@@ -44,6 +40,7 @@ class Dates:
 
 class Spider():
     position = ''
+    collection_name = ''
     def __init__(self):
         self.credentials = {}
         conn_string = ''
@@ -61,7 +58,7 @@ class Spider():
                                          self.credentials['db'])
         client = MongoClient(conn_string)
         db = client['data']
-        self.collection = db['basinlandrecords_eddy']
+        self.collection = db[self.collection_name]
         dcap = dict(DesiredCapabilities.PHANTOMJS)
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0")
@@ -71,6 +68,7 @@ class Spider():
         self.main_page()
 
     def main_page(self):
+        print(' - - - Starting scraping')
         self.wd.get('https://www.basinlandrecords.com/hflogin.html')
         self.wd.find_element_by_name('FormUser').send_keys(self.credentials['website_username'])
         self.wd.find_element_by_name('FormPassword').send_keys(self.credentials['website_password'])
@@ -103,6 +101,7 @@ class Spider():
 class EddyScraper(Spider):
     def __init__(self):
         self.position = 1
+        self.collection_name = 'basinland_eddy'
         super().__init__()
 
     def scraping_callback(self, date):
@@ -140,6 +139,7 @@ class EddyScraper(Spider):
 class LeaScraper(Spider):
     def __init__(self):
         self.position = 2
+        self.collection_name = 'basinland_lea'
         super().__init__()
 
     def scraping_callback(self, date):
@@ -176,5 +176,9 @@ class LeaScraper(Spider):
 
 
 if __name__ == '__main__':
-    spider = EddyScraper()
+    spider = None
+    if sys.argv[1] == 'eddy':
+        spider = EddyScraper()
+    if sys.argv[1] == 'lea':
+        spider = LeaScraper()
     spider.scrape()
