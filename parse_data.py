@@ -9,17 +9,16 @@ empty = dict(zip(['twp', 'rng', 'sec', 'aliquot'], [None] * 4))
 def parse_geolocation_lea(record):
     geolocation = record['sec_twp_rng']
     if not geolocation:
-        yield empty
-        return
+        return empty
     for divided in geolocation.split('|'):
         splited = divided.split(' ')
         if splited and len(splited) > 1:
-            yield {**get_location(splited[0].split('-')),
+            return {**get_location(splited[0].split('-')),
                    **{'aliquot': ''.join(splited[1:]).replace('of', ' ')}}
         elif splited:
-            yield {**get_location(splited[0].split('-')), **{'aliquot': None}}
+            return {**get_location(splited[0].split('-')), **{'aliquot': None}}
         else:
-            yield empty
+            return empty
 
 def parse_geolocation_eddy(record):
     if record['brief_legal']:
@@ -33,10 +32,10 @@ def parse_geolocation_eddy(record):
         for sec in ''.join(sec_twp_rng).split(','):
             sec = sec.strip()
             if '-' not in sec:
-                yield {'lot' : lot,
+                return {'lot' : lot,
                        'blk' : blk,
                        'sec' : sec, 'twp' : twp, 'rng' : rng}
-        yield {'lot' : lot,
+        return {'lot' : lot,
                        'blk' : blk,
                        'sec' : sec_hyphen, 'twp' : twp, 'rng' : rng}
 
