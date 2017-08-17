@@ -124,7 +124,7 @@ class EddyScraper(Spider):
             item['brief_legal'] = tds[11].text
             item['prior_reference'] = tds[12].text
             item['remarks'] = tds[13].text
-            item = {**item, parse_geolocation_eddy(item)}
+            item = {**item, **parse_geolocation_eddy(item)}
             if view_exists:
                 items.append(item)
             else:
@@ -164,7 +164,7 @@ class LeaScraper(Spider):
             item['brief_legal'] = tds[12].text
             item['prior_reference'] = tds[13].text
             item['remarks'] = tds[14].text
-            item = {**item, parse_geolocation_lea(item)}
+            item = {**item, **parse_geolocation_lea(item)}
             if view_exists:
                 items.append(item)
             else:
