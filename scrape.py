@@ -178,7 +178,7 @@ class LeaScraper(Spider):
 
 if __name__ == '__main__':
     today = datetime.today()
-    if today.day == 1:
+    if today.day == 1 or today.day == 7 or today.day == 17 or today.day == 21 or today.day == 28:
         spider = None
         if sys.argv[1] == 'eddy':
             spider = EddyScraper()
