@@ -10,7 +10,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
 from pymongo import MongoClient
 from time import sleep
-from parse_data import parse_geolocation
+from parse_data import parse_geolocation_lea, parse_geolocation_eddy
 
 class Dates:
     def __init__(self):
@@ -124,6 +124,7 @@ class EddyScraper(Spider):
             item['brief_legal'] = tds[11].text
             item['prior_reference'] = tds[12].text
             item['remarks'] = tds[13].text
+            item = {**item, parse_geolocation_eddy(item)}
             if view_exists:
                 items.append(item)
             else:
@@ -163,6 +164,7 @@ class LeaScraper(Spider):
             item['brief_legal'] = tds[12].text
             item['prior_reference'] = tds[13].text
             item['remarks'] = tds[14].text
+            item = {**item, parse_geolocation_lea(item)}
             if view_exists:
                 items.append(item)
             else:
