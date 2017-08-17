@@ -3,7 +3,7 @@ import re
 get_location = lambda twp_rng_sec: {'twp': twp_rng_sec[0],
                                     'rng': twp_rng_sec[1],
                                     'sec': twp_rng_sec[2]}
-empty = dict(zip(['twp', 'rng', 'sec', 'aliquot'], [None] * 4))
+empty = dict(zip(['twp', 'rng', 'sec', 'aliquot'], [''] * 4))
 
 
 def parse_geolocation_lea(record):
@@ -16,7 +16,7 @@ def parse_geolocation_lea(record):
             return {**get_location(splited[0].split('-')),
                    **{'aliquot': ''.join(splited[1:]).replace('of', ' ')}}
         elif splited:
-            return {**get_location(splited[0].split('-')), **{'aliquot': None}}
+            return {**get_location(splited[0].split('-')), **{'aliquot': ''}}
         else:
             return empty
 
